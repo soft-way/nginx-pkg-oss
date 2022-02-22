@@ -1,0 +1,39 @@
+MODULES+=	unsecure-cookie
+
+MODULE_SUMMARY_unsecure_cookie=	3rd-party unsecure cookie dynamic module
+
+include $(CONTRIB)/src/ngx_unsecure_cookie_module/version
+
+MODULE_VERSION_unsecure_cookie=	$(UNSECURE_COOKIE_NGINX_MODULE_VERSION)
+MODULE_RELEASE_unsecure_cookie=	1
+
+MODULE_VERSION_PREFIX_unsecure_cookie=$(MODULE_TARGET_PREFIX)
+
+MODULE_SOURCES_unsecure_cookie=	ngx_unsecure_cookie_module-$(UNSECURE_COOKIE_NGINX_MODULE_VERSION).tar.gz
+
+MODULE_CONFARGS_unsecure_cookie=	--add-dynamic-module=$(MODSRC_PREFIX)nginx_unsecure_cookie_module-$(UNSECURE_COOKIE_NGINX_MODULE_VERSION)
+
+.deps-module-unsecure-cookie:
+	cd $(CONTRIB) && make .sum-ngx_unsecure_cookie_module
+	touch $@
+
+
+define MODULE_POST_unsecure_cookie
+cat <<BANNER
+----------------------------------------------------------------------
+
+The $(MODULE_SUMMARY_unsecure_cookie) for $(MODULE_SUMMARY_PREFIX) has been installed.
+To enable this module, add the following to /etc/nginx/nginx.conf
+and reload nginx:
+
+    load_module modules/nginx_unsecure_cookie_module.so;
+
+Please refer to the modules documentation for further details:
+https://github.com/yumauri/nginx_unsecure_cookie_module
+
+----------------------------------------------------------------------
+BANNER
+endef
+export MODULE_POST_unsecure_cookie
+
+
